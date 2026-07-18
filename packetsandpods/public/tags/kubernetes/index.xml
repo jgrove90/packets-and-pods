@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes - Tag - Packets and Pods</title>
+    <link>http://localhost:37801/tags/kubernetes/</link>
+    <description>This is my cool site</description>
+    <generator>Hugo 0.162.1 &amp; FixIt v0.4.5</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 24 May 2026 16:45:40 +0800</lastBuildDate>
+    <atom:link href="http://localhost:37801/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Terraform, Talos, and the Art of the Disposable Server</title>
+      <link>http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/</link>
+      <pubDate>Sun, 24 May 2026 17:40:49 -0600</pubDate>
+      <guid>http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/</guid>
+      <category domain="http://localhost:37801/categories/cloud/">Cloud</category>
+      <description>This article describes how to deploy Talos Linux using Terraform on AWS.</description>
+    </item>
+  </channel>
+</rss>

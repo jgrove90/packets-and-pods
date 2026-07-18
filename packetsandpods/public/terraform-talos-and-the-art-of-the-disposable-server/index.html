@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=37801&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Terraform, Talos, and the Art of the Disposable Server - Packets and Pods</title><meta name="author" content="jared">
+<meta name="description" content="This article describes how to deploy Talos Linux using Terraform on AWS."><meta name="keywords" content='Kubernetes, Linux, Terraform'>
+	<meta itemprop="name" content="Terraform, Talos, and the Art of the Disposable Server">
+	<meta itemprop="description" content="This article describes how to deploy Talos Linux using Terraform on AWS.">
+	<meta itemprop="datePublished" content="2026-05-24T17:40:49-06:00">
+	<meta itemprop="dateModified" content="2026-05-24T16:45:40+08:00">
+	<meta itemprop="wordCount" content="2585">
+	<meta itemprop="image" content="http://localhost:37801/images/talos-banner.webp">
+	<meta itemprop="keywords" content="Kubernetes,Linux,Terraform"><meta property="og:url" content="http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/">
+	<meta property="og:site_name" content="Packets and Pods">
+	<meta property="og:title" content="Terraform, Talos, and the Art of the Disposable Server">
+	<meta property="og:description" content="This article describes how to deploy Talos Linux using Terraform on AWS.">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-05-24T17:40:49-06:00">
+		<meta property="article:modified_time" content="2026-05-24T16:45:40+08:00">
+		<meta property="article:tag" content="Kubernetes">
+		<meta property="article:tag" content="Linux">
+		<meta property="article:tag" content="Terraform">
+		<meta property="og:image" content="http://localhost:37801/images/talos-banner.webp">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="http://localhost:37801/images/talos-banner.webp">
+	<meta name="twitter:title" content="Terraform, Talos, and the Art of the Disposable Server">
+	<meta name="twitter:description" content="This article describes how to deploy Talos Linux using Terraform on AWS.">
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" data-light="#ffffff" data-dark="#ffffff" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/" title="Terraform, Talos, and the Art of the Disposable Server - Packets and Pods" /><link rel="alternate" type="text/plain" href="http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/index.md" title="Terraform, Talos, and the Art of the Disposable Server - Packets and Pods"><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Terraform, Talos, and the Art of the Disposable Server",
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:37801\/terraform-talos-and-the-art-of-the-disposable-server\/"
+    },"genre": "posts","keywords": "Kubernetes, Linux, Terraform","wordcount":  2585 ,
+    "url": "http:\/\/localhost:37801\/terraform-talos-and-the-art-of-the-disposable-server\/","datePublished": "2026-05-24T17:40:49-06:00","dateModified": "2026-05-24T16:45:40+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "jared"
+      },"description": "This article describes how to deploy Talos Linux using Terraform on AWS."
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="fixed" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="Packets and Pods"><span class="header-title-text">packets and pods</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Posts</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="Search titles or contents ..." id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+              <i class="fa-solid fa-search" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+              <i class="fa-solid fa-times-circle" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="Packets and Pods"><span class="header-title-text">packets and pods</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="Search titles or contents ..." id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                <i class="fa-solid fa-search" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                <i class="fa-solid fa-times-circle" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              Cancel
+            </a>
+          </li><li class="menu-item"><a class="menu-link" href="/posts/">Posts</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Terraform, Talos, and the Art of the Disposable Server</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      jared</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/cloud/" class="post-category" title="Category - Cloud"><i class="fa-regular fa-folder" aria-hidden="true"></i> Cloud</a></span></div><div class="post-meta-line"><span title="published on 2026-05-24 17:40:49"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2026-05-24">2026-05-24</time></span>&nbsp;<span title="Updated on 2026-05-24 16:45:40"><i class="fa-regular fa-calendar-check me-1" aria-hidden="true"></i><time datetime="2026-05-24">2026-05-24</time></span>&nbsp;<span title="2585 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 2600 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>13 minutes</span>&nbsp;</div>
+    </div><div class="featured-image"><img loading="eager" src='/images/talos-banner.webp' sizes="(max-width: 680px) 100vw, (max-width: 960px) 80vw, (max-width: 1440px) 56vw, 800px" alt="/images/talos-banner.webp"></div><div class="content" id="content"><h2 class="heading-element" id="in-the-land-of-aws-eks-why-deploy-talos-linux"><span>In the land of AWS EKS, why deploy Talos Linux?</span>
+  <a href="#in-the-land-of-aws-eks-why-deploy-talos-linux" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>I’ve been running Talos Linux in my homelab for over two years now. Some people might say it is overkill and part of me understands that sentimnt and another part of me thinks those nay sayer&rsquo;s don&rsquo;t understand how to operate Kubernetes and that it actually provides alot of convience. That opinion deserves a whole other blog post. Talos makes managing and deploying Kubernetes a breeze by representing a fundamental shift in how we think about infrastructure.</p>
+<p>Instead of the traditional Kubernetes deployment on top of an operating system, Talos made Kubernetes the operating system. After all, if Kubernetes is the operating system of the cloud, why are we still managing Linux distros underneath it? Sidero Labs has essentially stripped away everything unnecessary, leaving only what’s required to run containers reliably. To be honest, I’m surprised it isn’t the defacto Kubernetes deployment everywhere. Maybe there are edge cases I haven’t hit yet. Having deployed Talos on proxmox in my homelab I thought it would be a good exercise in what configuraion is needed to get Talos up and running in AWS. Before I dig into the AWS infrastructure side of things I want to discuss what I like about Talos, primarlily the immutability/ephermal nature and security of the operating system.</p>
+<h3 class="heading-element" id="immutability-from-pets-to-cattle"><span>Immutability: From Pets to Cattle</span>
+  <a href="#immutability-from-pets-to-cattle" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>In the DevOps space, we talk a lot about &ldquo;Pets vs. Cattle&rdquo; In the past, you treat your servers like pets: you name them, you nurse them back to health when they&rsquo;re sick, and you manage their individual updates and user configurations. But with Talos, we’re strictly in the &ldquo;Cattle&rdquo; business. These servers are ephemeral. You aren&rsquo;t a parent; you’re a butcher. Need a security update? You don’t patch the running server you send it to the slaughterhouse and roll out a new one. Need to add a new configuration? Spin up a new instance and tear down the old one.</p>
+<p>By automating this, you ensure your environment is consistent, repeatable, and most importantly completely disposable.This is where Talos really shines. It’s immutable by design. For example, I need the i915 extension to pass my onboard GPU through to Kubernetes for Plex transcoding. You can’t just &ldquo;install&rdquo; that once the system is live. Instead, Talos gives you the <a href="https://factory.talos.dev/" target="_blank" rel="external nofollow noopener noreferrer">Talos Factory</a> to bake those extensions directly into the image before you deploy. Need a change? You don’t log in and tweak settings you just update your image and redeploy. There is something very satisfying about destorying architecutre and having it spun back up in minutes.</p>
+<h3 class="heading-element" id="security-by-omission-small-footprint-massive-protection"><span>Security by Omission: Small Footprint, Massive Protection</span>
+  <a href="#security-by-omission-small-footprint-massive-protection" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>When it comes to security, Talos Linux takes a sledgehammer to the traditional attack surface. Or maybe it’s more accurate to say it takes a scalpel, because it ships with fewer than 50 binaries. The entire distribution is a tiny 100MB. Less bloat means faster runtimes and less Common Vulnerabilities and Exposures (CVE). We are talking about a boot time of around one minute and a fully functioning cluster up in less than five. WOW!</p>
+<p>Because immutability is baked directly into its DNA, you don&rsquo;t need a package manager. But the real game changer is how Sidero Labs handled remote access, they completely ditched SSH. Think about your typical Linux server. You have to expose port 22, manage SSH keys, and configure firewalls. With Talos, there is no SSH. There isn&rsquo;t even a shell to log into. Instead, you manage the entire OS remotely using <code>talosctl</code>, which operates via gRPC over mTLS. So we have a low latencey connection using utilizing a certificate generated right after the OS bootstraps. This is a huge win for security.</p>
+<p>For a long time, certain highly regulated industries couldn&rsquo;t touch Talos because of strict compliance and auditing rules. However, Sidero Labs knocked down that barrier by introducing <a href="https://www.siderolabs.com/blog/talos-linux-fips-140-3-compliant-builds/" target="_blank" rel="external nofollow noopener noreferrer">FIPS-140-3 compliant</a> builds back in September 2025. This means Talos now officially meets the stringent data security standards set by the U.S. National Institute of Standards and Technology (NIST), opening the door for government, finance, and healthcare tech stacks to finally run a Talos cluster.</p>
+<h2 class="heading-element" id="the-philosophy-keeping-aws-simple-and-cheap"><span>The Philosophy: Keeping AWS Simple (and Cheap)</span>
+  <a href="#the-philosophy-keeping-aws-simple-and-cheap" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>This isn’t going to be another tutorial on how to build Terraform modules from scratch. There are plenty of guides across the internet that setup already. Instead, I want to provide a highlevel overview of the goals I had in mind for each module. When it comes to building architecture in the cloud, my philosophy is simple: use as few cloud-specific services as possible. Give me compute in its purest form, just an EC2 instance. As a Linux administrator, I’m comfortable managing servers. Tools like Ansible and Bash/user-data, give me the freedom to spin up an instance exactly how I want it, leaving no doubt about what is happening under the hood. Compare that to certain native AWS services that feel like an expensive black box and require a massive time investment just to learn proprietary configurations you can&rsquo;t use anywhere else. Honestly, that’s a massive reason why I fell in love with Talos and Kubernetes in general.</p>
+<p>Kubernetes already has everything you need to manage workloads, handle rollouts, and monitor applications. Plus, I can deploy that exact same cluster across multiple clouds without changing my workflow. Take AWS Systems Manager (SSM) as an example. AWS heavily pushes you to use SSM for remote machine access, but the whole process feels clunky. It forces you to memorize long commands with multiple flags that require constant Googling. Sure, you could create a bash alias, but you shouldn&rsquo;t have to jump through hoops just to talk to your infrastructure. To simplify things, I took matters into my own hands. I deployed a tiny EC2 instance running Tailscale as a subnet router. It was incredibly simple, required almost zero setup, and instantly gave me secure access to every single machine inside the VPC.</p>
+<p>Here is a high-level overview of how the architecture hangs together before we look at the code:</p>
+<h3 class="heading-element" id="building-the-foundation-vpcs-subnets-and-routing"><span>Building the Foundation: VPCs, Subnets, and Routing</span>
+  <a href="#building-the-foundation-vpcs-subnets-and-routing" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://github.com/jgrove90/talos-foundry/tree/main/modules/network" target="_blank" rel="external nofollow noopener noreferrer">Networking Module</a></p>
+<p>Every cloud project at its core is a networking project. At least that&rsquo;s been my experience. No matter what you&rsquo;re building, sooner or later you find yourself staring at route tables, CIDR blocks, and subnet boundaries wondering where your afternoon went. The Virtual Private Cloud (VPC) serves as the foundation for everything else in the environment. Before Kubernetes can schedule a pod, before Talos can bootstrap a cluster, and before Tailscale can provide secure access, the network needs to exist.</p>
+<p>For this project, I wanted a reusable VPC module that could be deployed repeatedly without requiring manual configuration. The module automatically creates public and private subnets across multiple Availability Zones, configures route tables and associations, and manages Internet Gateway connectivity. One area where I intentionally deviated from the standard AWS architecture was NAT. AWS NAT Gateways are fantastic from an operational perspective because they&rsquo;re managed and highly available. They&rsquo;re also surprisingly good at generating monthly charges. Since this project is intended for learning, experimentation, and personal use, I opted to use the <code>fck-nat</code> Terraform module instead. It provides NAT functionality at a fraction of the cost while remaining perfectly adequate for this use case, and honestly it wouldn&rsquo;t take much more effort to make it highly availble for production workloads.</p>
+<h3 class="heading-element" id="security-without-making-operations-miserable"><span>Security Without Making Operations Miserable</span>
+  <a href="#security-without-making-operations-miserable" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://github.com/jgrove90/talos-foundry/tree/main/modules/security" target="_blank" rel="external nofollow noopener noreferrer">Security Module</a></p>
+<p>Security is one of those topics where people tend to fall into two camps. The first group opens everything to <code>0.0.0.0/0</code> and promises they&rsquo;ll lock it down later. The second group builds a security model so restrictive that even the administrators can&rsquo;t figure out how to access their own systems. I wanted something in the middle: secure by default, but still practical to operate.</p>
+<p>The foundation starts with IAM. Oh the wonderful world of IAM. Rather than embedding credentials on instances or passing around access keys, every node receives an IAM role with only the permissions it actually needs. AWS handles credential rotation behind the scenes, which means there are no long-lived secrets sitting on servers waiting to become tomorrow&rsquo;s security incident.</p>
+<p>From there, the cluster is segmented into dedicated security groups for control plane nodes, worker nodes, and management infrastructure. Communication between components is intentionally restricted to the ports required for Kubernetes and Talos to function. The control plane can talk to the workers, workers can talk to the API server, and nodes can communicate with one another when necessary but that&rsquo;s about it. If traffic isn&rsquo;t required for the cluster to operate, it probably isn&rsquo;t allowed.</p>
+<p>I also wanted flexibility when it came to outbound traffic. Some environments are perfectly fine with unrestricted egress, especially in development. Others require much tighter controls. Rather than forcing a single approach, the module supports both models. You can allow standard outbound access or enable stricter egress policies that limit what nodes can reach outside the VPC.</p>
+<p>Remote administration follows the same philosophy. Instead of exposing management services directly to the internet, I rely on AWS Systems Manager and Tailscale. SSM provides a secure way to access instances during break the glass scenerios, while Tailscale gives me private connectivity to the cluster without opening public management ports. The end result is that the Kubernetes API, Talos API, and internal services remain private while still being accessible from authorized devices.</p>
+<h3 class="heading-element" id="control-plane-first-workers-later"><span>Control Plane First, Workers Later</span>
+  <a href="#control-plane-first-workers-later" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://github.com/jgrove90/talos-foundry/tree/main/modules/compute" target="_blank" rel="external nofollow noopener noreferrer">Compute Module</a></p>
+<p>Once the networking and security foundations were in place, it was finally time to deploy some actual compute. This ended up being one of those areas that seems simple on the surface but quickly turns into a balancing act between flexibility, cost, and operational simplicity. For this deployment, I chose to focus exclusively on the control plane nodes. Worker nodes are intentionally absent. Before anyone starts sharpening their pitchforks, that&rsquo;s by design. I plan to use <a href="https://karpenter.sh/" target="_blank" rel="external nofollow noopener noreferrer">Karpenter</a> to handle worker node provisioning and autoscaling, which deserves its own dedicated blog post.</p>
+<p>The control plane nodes are the brains of the operation. They host etcd, maintain cluster state, and keep Kubernetes functioning. If the control plane disappears, you&rsquo;re going to have a bad day. Because of that, I wanted a deployment pattern that could survive an Availability Zone failure while remaining flexible enough to support different environments and workloads.</p>
+<p>Rather than hardcoding infrastructure decisions into the Terraform resources, everything is driven through variables. Need static IP addresses? Supported. Want AWS to assign them dynamically? That&rsquo;s fine too. Running On-Demand instances in production? Easy. Looking to save money with Spot Instances in a development environment? Also supported.</p>
+<h3 class="heading-element" id="bootstrapping-talos-without-the-click-ops"><span>Bootstrapping Talos Without the Click-Ops</span>
+  <a href="#bootstrapping-talos-without-the-click-ops" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://github.com/jgrove90/talos-foundry/tree/main/modules/talos-bootstrap" target="_blank" rel="external nofollow noopener noreferrer">Talos Bootstrap Module</a></p>
+<p>Getting virtual machines deployed is actually the easy part. A Kubernetes cluster isn&rsquo;t a Kubernetes cluster just because a few EC2 instances are running. Somebody still has to generate cluster secrets, apply machine configurations, bootstrap the control plane, retrieve credentials, and create the kubeconfig that operators will eventually use to access the cluster. None of these steps are particularly difficult, but they are repetitive, and repetitive tasks are exactly the kind of things that bug me.</p>
+<p>I wanted this deployment to be as close to a single-command experience as possible. If Terraform is already responsible for provisioning the infrastructure, why stop there? Why deploy the servers and then switch over to a collection of shell scripts and manual commands to finish the job? This is where the Talos Terraform Provider really shines. Instead of treating cluster initialization as a separate process, Terraform becomes responsible for the entire lifecycle of the deployment. Machine secrets are generated automatically, configurations are applied to the nodes, the control plane is bootstrapped, and both the <code>talosconfig</code> and <code>kubeconfig</code> files are created for me when everything is finished.</p>
+<p>The result is a deployment process that feels almost boring and that&rsquo;s exactly what you want. I can deploy a cluster today, destroy it tomorrow, and rebuild it next week knowing the exact same sequence of events will occur every single time. No forgotten commands. No missing configuration files. No wondering which terminal history contained the bootstrap command I ran three months ago.</p>
+<h3 class="heading-element" id="tailscale-vpn"><span>Tailscale VPN</span>
+  <a href="#tailscale-vpn" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://github.com/jgrove90/talos-foundry/tree/main/modules/vpn-tailscale" target="_blank" rel="external nofollow noopener noreferrer">Tailscale VPN Module</a></p>
+<p>One thing I wanted to avoid in this deployment was exposing management interfaces directly to the internet. Sure, you can lock down the Kubernetes API to your home IP, open the Talos API to a trusted CIDR block, and call it a day. Plenty of people do exactly that. But the moment you start traveling, change ISPs, or need to administer the cluster from somewhere else, those firewall rules become an operational annoyance.</p>
+<p>The traditional answer is usually some combination of VPN appliances, bastion hosts, jump boxes, or a dedicated management network. They work, but they also introduce more infrastructure to maintain. Now you&rsquo;re rotating credentials, managing SSH access, and troubleshooting why someone can&rsquo;t connect at 2 AM. Before long, you&rsquo;ve built an entire platform just to reach your platform.</p>
+<p>For this project, I wanted something simpler. Instead of exposing services publicly or maintaining a traditional VPN stack, I deployed a dedicated Tailscale subnet router inside AWS. Think of it as a secure bridge between my private VPC and authenticated devices on my Tailscale network. Once connected, I can reach the Kubernetes API, Talos management endpoints, and internal cluster services exactly as if I were sitting inside the VPC itself. The best part is that the entire setup is automated through Terraform. The EC2 instance, networking, security groups, and bootstrap configuration are all provisioned as code via a user-data script. During startup, the instance installs Tailscale, joins the tailnet, advertises the VPC routes, and immediately becomes a secure entry point into the environment.</p>
+<p>The end result is a private cluster that remains private. No public Kubernetes API endpoint. No public Talos API endpoint. No bastion hosts. Just authenticated access through Tailscale whenever I need to administer the cluster. In my opinion, that&rsquo;s a much cleaner solution and maintanable solution.</p>
+<h2 class="heading-element" id="looking-ahead-karpenter-cilium-and-a-more-cloud-native-cluster"><span>Looking Ahead: Karpenter, Cilium, and a More Cloud-Native Cluster</span>
+  <a href="#looking-ahead-karpenter-cilium-and-a-more-cloud-native-cluster" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Traditionally, Kubernetes clusters are deployed with a fixed number of worker nodes. Maybe you start with three, realize you need five, manually update your infrastructure, and then eventually discover you&rsquo;re paying for idle compute most of the day. We&rsquo;ve gotten pretty good at autoscaling pods, but many clusters are still surprisingly bad at autoscaling the infrastructure underneath them. This is where Karpenter comes in. Karpenter is a Kubernetes-native node provisioning system originally developed by AWS. Instead of managing Auto Scaling Groups and pre-defining worker node pools, Karpenter watches for unschedulable pods and provisions compute on demand. If a workload needs resources, Karpenter launches a node. When that node is no longer needed, Karpenter can terminate it automatically.</p>
+<p>At the same time, I plan to replace the default networking stack with <a href="https://cilium.io/" target="_blank" rel="external nofollow noopener noreferrer">Cilium</a>. While traditional Container Network Interfaces (CNIs) rely heavily on iptables and overlay networking, Cilium leverages eBPF directly within the Linux kernel to provide networking, observability, and security with significantly less overhead. Beyond performance improvements, Cilium unlocks powerful capabilities such as network policies, reverse proxy, service load balancing, traffic visibility, and cluster-wide observability through tools like <a href="https://github.com/cilium/hubble" target="_blank" rel="external nofollow noopener noreferrer">Hubble</a>.</p>
+<p>Throughout this project I&rsquo;ve tried to embrace the idea that infrastructure should be disposable and automated. Karpenter extends that philosophy to worker nodes, and Cilium extends it to networking. Instead of managing fleets of servers and complex networking rules, the cluster becomes increasingly capable of managing itself. In the next post, I&rsquo;ll walk through deploying Karpenter on Talos Linux, integrating it with AWS, and replacing the default networking stack with Cilium to create a fully autoscaling, cloud-native Kubernetes platform.</p></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2026-05-24 16:45:40">Updated on 2026-05-24&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//home/jgrove/git/packetsandpods/packetsandpods/content/posts/Terraform,%20Talos,%20and%20the%20Art%20of%20the%20Disposable%20Server.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/" data-hashtag="Kubernetes"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/" data-title="Terraform, Talos, and the Art of the Disposable Server"><i class="fa-brands fa-hacker-news" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/" data-title="Terraform, Talos, and the Art of the Disposable Server"><svg class="icon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LINE</title><path d="M19.365 9.863c.349.0.63.285.63.631.0.345-.281.63-.63.63H17.61v1.125h1.755c.349.0.63.283.63.63.0.344-.281.629-.63.629h-2.386c-.345.0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346.0.627.285.627.63.0.349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211.0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346.0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195.0.375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345.0.63.285.63.63v4.771zm-5.741.0c0 .344-.282.629-.631.629-.345.0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346.0.628.285.628.63v4.771zm-2.466.629H4.917c-.345.0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348.0.63.285.63.63v4.141h1.756c.348.0.629.283.629.63.0.344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943.0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/" data-title="Terraform, Talos, and the Art of the Disposable Server" data-image="/images/talos-banner.webp"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/kubernetes/" class="post-tag" title="Tags - Kubernetes">Kubernetes</a><a href="/tags/linux/" class="post-tag" title="Tags - Linux">Linux</a><a href="/tags/terraform/" class="post-tag" title="Tags - Terraform">Terraform</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="Contents"></aside></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.162.1"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.5"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">jared</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/autocomplete/autocomplete.min.js" defer></script><script src="/lib/lightgallery/lightgallery.min.js" defer></script><script src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js" defer></script><script src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js" defer></script><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/lib/cell-tooltip/cell-tooltip.umd.js" defer></script><script src="/js/config/510167e07c106e977c0f563ecb0a708f.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>
