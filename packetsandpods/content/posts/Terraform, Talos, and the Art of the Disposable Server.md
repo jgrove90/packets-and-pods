@@ -42,8 +42,6 @@ This isn’t going to be another tutorial on how to build Terraform modules from
 
 Kubernetes already has everything you need to manage workloads, handle rollouts, and monitor applications. Plus, I can deploy that exact same cluster across multiple clouds without changing my workflow. Take AWS Systems Manager (SSM) as an example. AWS heavily pushes you to use SSM for remote machine access, but the whole process feels clunky. It forces you to memorize long commands with multiple flags that require constant Googling. Sure, you could create a bash alias, but you shouldn't have to jump through hoops just to talk to your infrastructure. To simplify things, I took matters into my own hands. I deployed a tiny EC2 instance running Tailscale as a subnet router. It was incredibly simple, required almost zero setup, and instantly gave me secure access to every single machine inside the VPC. 
 
-Here is a high-level overview of how the architecture hangs together before we look at the code:
-
 ### Building the Foundation: VPCs, Subnets, and Routing
 
 [Networking Module](https://github.com/jgrove90/talos-foundry/tree/main/modules/network) 
