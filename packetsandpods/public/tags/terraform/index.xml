@@ -3,10 +3,10 @@
   <channel>
     <title>Terraform - Tag - Packets and Pods</title>
     <link>http://localhost:37801/tags/terraform/</link>
-    <description>This is my cool site</description>
+    <description>A blog about my homelab journey.</description>
     <generator>Hugo 0.162.1 &amp; FixIt v0.4.5</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 24 May 2026 16:45:40 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 18 Jul 2026 08:39:26 -0600</lastBuildDate>
     <atom:link href="http://localhost:37801/tags/terraform/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Terraform, Talos, and the Art of the Disposable Server</title>

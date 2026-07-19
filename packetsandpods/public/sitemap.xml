@@ -2,55 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:37801/terraform-talos-and-the-art-of-the-disposable-server/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:37801/categories/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:37801/categories/cloud/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:37801/tags/kubernetes/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:37801/tags/linux/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:37801/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:37801/posts/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:37801/tags/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:37801/tags/terraform/</loc>
-    <lastmod>2026-05-24T16:45:40+08:00</lastmod>
+    <lastmod>2026-07-18T08:39:26-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
