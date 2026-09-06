@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>From Gaming PC to AI Server: Building a Hybrid Workstation - Packets and Pods</title><meta name="author" content="jared">
+<meta name="description" content="How I turned my increasingly underutilized gaming PC into a hybrid AI server using llama.cpp, llmfit, and systemd without giving up its day job as a desktop."><meta name="keywords" content='Kubernetes, Linux, AI'>
+	<meta itemprop="name" content="From Gaming PC to AI Server: Building a Hybrid Workstation">
+	<meta itemprop="description" content="How I turned my increasingly underutilized gaming PC into a hybrid AI server using llama.cpp, llmfit, and systemd without giving up its day job as a desktop.">
+	<meta itemprop="datePublished" content="2026-08-30T14:00:00-06:00">
+	<meta itemprop="dateModified" content="2026-08-30T14:00:00-06:00">
+	<meta itemprop="wordCount" content="2241">
+	<meta itemprop="image" content="http://localhost:1313/images/2-from-gaming-pc-to-ai-server/llama-cpp.webp">
+	<meta itemprop="keywords" content="Kubernetes,Linux,AI"><meta property="og:url" content="http://localhost:1313/from-gaming-pc-to-ai-server-building-a-hybrid-workstation/">
+	<meta property="og:site_name" content="Packets and Pods">
+	<meta property="og:title" content="From Gaming PC to AI Server: Building a Hybrid Workstation">
+	<meta property="og:description" content="How I turned my increasingly underutilized gaming PC into a hybrid AI server using llama.cpp, llmfit, and systemd without giving up its day job as a desktop.">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-08-30T14:00:00-06:00">
+		<meta property="article:modified_time" content="2026-08-30T14:00:00-06:00">
+		<meta property="article:tag" content="Kubernetes">
+		<meta property="article:tag" content="Linux">
+		<meta property="article:tag" content="AI">
+		<meta property="og:image" content="http://localhost:1313/images/2-from-gaming-pc-to-ai-server/llama-cpp.webp">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="http://localhost:1313/images/2-from-gaming-pc-to-ai-server/llama-cpp.webp">
+	<meta name="twitter:title" content="From Gaming PC to AI Server: Building a Hybrid Workstation">
+	<meta name="twitter:description" content="How I turned my increasingly underutilized gaming PC into a hybrid AI server using llama.cpp, llmfit, and systemd without giving up its day job as a desktop.">
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" data-light="#ffffff" data-dark="#ffffff" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/from-gaming-pc-to-ai-server-building-a-hybrid-workstation/" title="From Gaming PC to AI Server: Building a Hybrid Workstation - Packets and Pods" /><link rel="prev" type="text/html" href="http://localhost:1313/terraform-talos-and-the-art-of-the-disposable-server/" title="Terraform, Talos, and the Art of the Disposable Server" /><link rel="alternate" type="text/plain" href="http://localhost:1313/from-gaming-pc-to-ai-server-building-a-hybrid-workstation/index.md" title="From Gaming PC to AI Server: Building a Hybrid Workstation - Packets and Pods"><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "From Gaming PC to AI Server: Building a Hybrid Workstation",
+    "inLanguage": "en",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "http:\/\/localhost:1313\/from-gaming-pc-to-ai-server-building-a-hybrid-workstation\/"
+    },"genre": "posts","keywords": "Kubernetes, Linux, AI","wordcount":  2241 ,
+    "url": "http:\/\/localhost:1313\/from-gaming-pc-to-ai-server-building-a-hybrid-workstation\/","datePublished": "2026-08-30T14:00:00-06:00","dateModified": "2026-08-30T14:00:00-06:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "jared"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="fixed" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="Packets and Pods"><span class="header-title-text">packets and pods</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Posts</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="Search titles or contents ..." id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+              <i class="fa-solid fa-search" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+              <i class="fa-solid fa-times-circle" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="Packets and Pods"><span class="header-title-text">packets and pods</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="Search titles or contents ..." id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                <i class="fa-solid fa-search" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                <i class="fa-solid fa-times-circle" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              Cancel
+            </a>
+          </li><li class="menu-item"><a class="menu-link" href="/posts/">Posts</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>From Gaming PC to AI Server: Building a Hybrid Workstation</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      jared</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/ai-infrastructure/" class="post-category" title="Category - AI Infrastructure"><i class="fa-regular fa-folder" aria-hidden="true"></i> AI Infrastructure</a></span></div><div class="post-meta-line"><span title="published on 2026-08-30 14:00:00"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2026-08-30">2026-08-30</time></span>&nbsp;<span title="2241 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 2300 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>11 minutes</span>&nbsp;</div>
+    </div><div class="featured-image"><img loading="eager" src='/images/2-from-gaming-pc-to-ai-server/llama-cpp.webp' sizes="(max-width: 680px) 100vw, (max-width: 960px) 80vw, (max-width: 1440px) 56vw, 800px" alt="/images/2-from-gaming-pc-to-ai-server/llama-cpp.webp"></div><div class="content" id="content"><h1 class="heading-element" id="a-second-life-for-my-desktop"><span>A Second Life for My Desktop</span>
+  <a href="#a-second-life-for-my-desktop" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>I believe open source models are the future, despite what the AI overlords and their fear-mongering would have us believe.</p>
+<p>Over the past few years, my desktop hasn&rsquo;t exactly been earning its keep. I haven&rsquo;t been gaming nearly as much, which means my relatively capable Radeon 6800 XT has spent a lot of time doing very little.</p>
+<p>At the same time, AI infrastructure has become increasingly interesting to me. So rather than let a perfectly good GPU become an expensive paperweight, I decided to give the machine a second job: running local AI workloads.</p>
+<p>The goal isn&rsquo;t to turn my desktop into a dedicated server. I still want to use it as a desktop especially with the possibility of Grand Theft Auto VI eventually making its way to PC (can my 6800 XT even run it? That&rsquo;s a problem for future me). Instead, I&rsquo;m building a hybrid setup where the machine can pull double duty as an AI inference server when I&rsquo;m not gaming or otherwise using it.</p>
+<p>It should also complement my Kubernetes homelab nicely and, more importantly, give me a place to experiment with local AI infrastructure and inference tuning without spending a fortune on cloud GPUs.</p>
+<p>I don&rsquo;t have anything particularly crazy running here, but here&rsquo;s the hardware I&rsquo;m working with:</p>
+<p><img loading="lazy" src='/images/2-from-gaming-pc-to-ai-server/system-resources.webp' alt="System resource usage while running the AI server"></p>
+<h1 class="heading-element" id="hybrid-server-approach-with-systemd"><span>Hybrid Server Approach With systemd</span>
+  <a href="#hybrid-server-approach-with-systemd" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>The goal here is a machine that could switch between roles without a bunch of manual intervention. When I&rsquo;m using the desktop, it should behave like a desktop. When I&rsquo;m not, it should be available as an AI inference server.</p>
+<p>For this, I decided to use <code>systemd</code>. It gives me a simple way to manage the inference server as a service, allowing me to start it when I want to run AI workloads and stop it when I need the GPU back for gaming or other desktop workloads. Otherwise, the machine can sit there quietly acting as an AI server.</p>
+<p>Once I started working through the problem, I realized there were several pieces I needed to solve:</p>
+<ol>
+<li>Power management — I don&rsquo;t want the machine consuming power just to sit around waiting for an AI request. If I&rsquo;m not using it, it should be able to sleep.</li>
+<li>Wake-on-LAN — If the machine is asleep, I need a way to wake it up when I actually want to use the AI server.</li>
+<li>Model selection — Find a model that makes sense for the hardware I actually have, rather than blindly downloading the biggest model I can find.</li>
+<li>Inference endpoint — Expose the model through an endpoint that fits into the rest of my homelab and can be consumed by other services.</li>
+<li>Network access — Configure the firewall to allow the necessary traffic without opening up more of the machine than I need to.</li>
+</ol>
+<p>None of these problems are particularly difficult on their own. The interesting part is putting them together into something that behaves more like infrastructure while still being my everyday desktop.</p>
+<h1 class="heading-element" id="the-implementation"><span>The Implementation</span>
+  <a href="#the-implementation" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>systemd services inbound!</p>
+<h3 class="heading-element" id="fixing-my-sleep"><span>Fixing My Sleep</span>
+  <a href="#fixing-my-sleep" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>I&rsquo;ve had a weird problem with this computer for the last several Linux kernel updates: it wouldn&rsquo;t stay asleep.</p>
+<p>I&rsquo;d suspend the machine, the screen would go dark, and a few seconds later it would wake right back up. This started sometime around four or five kernel updates ago, and even updating the BIOS to the latest version didn&rsquo;t solve it.</p>
+<p>Since power management is pretty important for this project, I needed to figure out what was waking the machine up. Unfortunately, this turned into one of those troubleshooting sessions involving far too much trial and error.</p>
+<p>Eventually, I narrowed it down to an ACPI wakeup source called GPP0.</p>
+<p>ACPI, or the Advanced Configuration and Power Interface, is the firmware interface Linux uses to communicate with things like power states, devices, and wakeup events. The kernel exposes some of these wakeup sources through /proc/acpi/wakeup.</p>
+<p>GPP0 is an ACPI-defined PCIe/General Purpose Port wakeup source. On my system, it was being allowed to wake the machine immediately after suspend. The exact device behind GPP0 is hardware and firmware dependent, but in my case disabling it was enough to let the machine actually stay asleep.</p>
+<p>The fix ended up being surprisingly simple. I created a systemd service that disables the GPP0 wakeup source during boot:</p>
+<div class="code-block highlight" data-mode="classic" data-copyable="true"><div class="chroma">
+<div class="code-header language-fallback"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="action-btn line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers" data-ct-tooltip><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="action-btn line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap" data-ct-tooltip><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="action-btn copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard" data-copied-text="Copied" data-ct-tooltip><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[Unit]
+</span></span><span class="line"><span class="cl">Description=Disable GPP0 ACPI Wakeup
+</span></span><span class="line"><span class="cl">After=multi-user.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[Service]
+</span></span><span class="line"><span class="cl">Type=oneshot
+</span></span><span class="line"><span class="cl">ExecStart=/bin/sh -c &#34;grep -q &#39;GPP0.*enabled&#39; /proc/acpi/wakeup &amp;&amp; echo GPP0 &gt; /proc/acpi/wakeup || true&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[Install]
+</span></span><span class="line"><span class="cl">WantedBy=multi-user.target</span></span></code></pre></td></tr></table></div>
+</div>
+</div><p>Writing the name of a wakeup source to /proc/acpi/wakeup toggles its state. The service first checks whether GPP0 is currently enabled and only disables it if necessary.</p>
+<p>This is one of those fixes that feels a little ridiculous until you realize you&rsquo;ve spent an hour watching a computer suspend for approximately four seconds before waking itself back up.</p>
+<h3 class="heading-element" id="configuring-wake-on-lan"><span>Configuring Wake-On-LAN</span>
+  <a href="#configuring-wake-on-lan" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Now that the sleep issue was fixed, I needed a way to remotely wake the desktop when I wanted to use it for AI.</p>
+<p>The first step was in the BIOS. I enabled Wake-on-LAN and disabled ErP (Energy-related Products). ErP can cut power to the network hardware during sleep, which defeats the whole purpose of Wake-on-LAN. Most modern motherboards support this, and it&rsquo;s a surprisingly useful feature.</p>
+<p>Unfortunately, enabling Wake-on-LAN in the BIOS wasn&rsquo;t enough. Linux also needs to be configured to listen for Wake-on-LAN packets.</p>
+<p>I used <code>ethtool</code> to enable it on my Ethernet interface:</p>
+<div class="code-block highlight" data-mode="classic" data-copyable="true"><div class="chroma">
+<div class="code-header language-fallback"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="action-btn line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers" data-ct-tooltip><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="action-btn line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap" data-ct-tooltip><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="action-btn copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard" data-copied-text="Copied" data-ct-tooltip><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">sudo</span> <span class="n">ethtool</span> <span class="o">-</span><span class="n">s</span> <span class="n">eno1</span> <span class="n">wol</span> <span class="n">g</span></span></span></code></pre></td></tr></table></div>
+</div>
+</div><p>The problem is that this setting doesn&rsquo;t persist across reboots. So, naturally, I made systemd do it for me:</p>
+<div class="code-block highlight" data-mode="classic" data-copyable="true"><div class="chroma">
+<div class="code-header language-fallback"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="action-btn line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers" data-ct-tooltip><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="action-btn line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap" data-ct-tooltip><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="action-btn copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard" data-copied-text="Copied" data-ct-tooltip><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">Unit</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">Description</span><span class="o">=</span><span class="n">Enable</span> <span class="n">Wake</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">LAN</span>
+</span></span><span class="line"><span class="cl"><span class="n">After</span><span class="o">=</span><span class="n">network</span><span class="o">-</span><span class="n">pre</span><span class="o">.</span><span class="n">target</span>
+</span></span><span class="line"><span class="cl"><span class="n">Before</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">target</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">Service</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">Type</span><span class="o">=</span><span class="n">oneshot</span>
+</span></span><span class="line"><span class="cl"><span class="n">ExecStart</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">ethtool</span> <span class="o">-</span><span class="n">s</span> <span class="n">eno1</span> <span class="n">wol</span> <span class="n">g</span>
+</span></span><span class="line"><span class="cl"><span class="n">RemainAfterExit</span><span class="o">=</span><span class="n">yes</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">Install</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">WantedBy</span><span class="o">=</span><span class="n">multi</span><span class="o">-</span><span class="n">user</span><span class="o">.</span><span class="n">target</span></span></span></code></pre></td></tr></table></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div>
+</div>
+</div><p>Now the BIOS keeps the network interface available during sleep, and systemd enables Wake-on-LAN every time Linux boots.</p>
+<p>Now that begs the question, how do I wake up the desktop?  With a little magic of course! I installed a small utility called <code>wakeonlan</code> that sends a Wake-on-LAN magic packet to a network interface using its MAC address. If the machine is asleep and everything is configured correctly, receiving that packet is enough to wake it back up.</p>
+<div class="code-block highlight" data-mode="classic" data-copyable="true"><div class="chroma">
+<div class="code-header language-fallback"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="action-btn line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers" data-ct-tooltip><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="action-btn line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap" data-ct-tooltip><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="action-btn copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard" data-copied-text="Copied" data-ct-tooltip><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">wakeonlan &lt;MAC_ADDRESS&gt;</span></span></code></pre></td></tr></table></div>
+</div>
+</div><p>That&rsquo;s it. One packet, and the desktop wakes up.</p>
+<h1 class="heading-element" id="choosing-an-inference-engine"><span>Choosing an Inference Engine</span>
+  <a href="#choosing-an-inference-engine" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>With the hardware sorted out, the next question was what I was actually going to use to run the models.</p>
+<p>The two obvious choices were vLLM and llama.cpp.</p>
+<p>vLLM is designed primarily around high-performance model serving. It makes a lot of sense when you&rsquo;re running larger models, handling multiple concurrent requests, and trying to maximize throughput. It also provides an OpenAI-compatible API, making it a good fit for production-style inference workloads.</p>
+<p>llama.cpp takes a different approach. It&rsquo;s lightweight, runs on both CPUs and GPUs, has strong support for quantized models, and includes its own HTTP server with an OpenAI-compatible API. It also supports things like continuous batching and parallel requests, so it isn&rsquo;t limited to running one prompt at a time.</p>
+<p>In a larger GPU cluster where throughput is the primary concern, I&rsquo;d probably reach for vLLM. For this situation, however, llama.cpp made more sense.</p>
+<p>I&rsquo;m working with a single desktop GPU, I want to experiment with different quantized models, and I care more about getting the most out of the hardware I already own than maximizing requests per second.</p>
+<p>The next step is tuning llama.cpp specifically for this machine. Things like GPU offloading, context size, batch size, and the model&rsquo;s quantization can have a significant impact on memory usage and inference performance. Rather than assuming the default settings are optimal, I&rsquo;ll benchmark different configurations and find the sweet spot for my hardware in a future blog post.</p>
+<h2 class="heading-element" id="choosing-the-model"><span>Choosing the model</span>
+  <a href="#choosing-the-model" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h2><p>Choosing a model can be overwhelming. How do you know what will actually run on your hardware? There are thousands of models on Hugging Face, an open, maybe not that open model registry, with the recent purchase by Nvidia. Additionally, each model comes in multiple sizes and quantizations.</p>
+<p>Being a fan of terminal user interfaces (TUIs), I found a much easier way to answer that question: <code>llmfit</code>.</p>
+<p><img loading="lazy" src='/images/2-from-gaming-pc-to-ai-server/llmfit.webp' alt="llmfit"></p>
+<p><code>llmfit</code> detects your hardware and estimates which models will fit, what quantization makes sense, and how they should perform. Instead of downloading a 20GB model and finding out the hard way that my GPU isn&rsquo;t particularly interested in running it, I can see what makes sense before downloading anything. Using the TUI, I was able to browse models based on my actual hardware and narrow down the options pretty quickly.</p>
+<p>For this setup, I settled on Qwen3-14B Q6_K in GGUF format.GGUF is a model file format designed for local inference. It packages the information needed to run a model—including its weights, tokenizer, and configuration—into a single file. It is also the format used by llama.cpp.</p>
+<p>The Q6_K part refers to the quantization. In simple terms, quantization reduces the precision used to store the model&rsquo;s weights, which significantly reduces memory requirements compared with running the model at full precision. The tradeoff is that lower quantization can reduce model quality, while higher quantization uses more memory. Q6_K sits toward the higher-quality end of the common quantization options, giving me a good balance between memory usage and model quality for the hardware I have.</p>
+<p>The result is a model that&rsquo;s large enough to be useful without completely consuming the machine&rsquo;s resources.</p>
+<h1 class="heading-element" id="ready-for-launch"><span>Ready for Launch</span>
+  <a href="#ready-for-launch" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>With the model selected, it was finally time to launch the server.</p>
+<p>Thankfully, this part is pretty straightforward. llama.cpp includes llama-server, which exposes the model over HTTP and provides an OpenAI-compatible API. I wrapped it in a systemd service so it starts automatically, restarts if it fails, and behaves like any other service on the machine.</p>
+<div class="code-block highlight" data-mode="classic" data-copyable="true"><div class="chroma">
+<div class="code-header language-fallback"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="action-btn line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers" data-ct-tooltip><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="action-btn line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap" data-ct-tooltip><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="action-btn copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard" data-copied-text="Copied" data-ct-tooltip><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[Unit]
+</span></span><span class="line"><span class="cl">Description=llama.cpp AI Server
+</span></span><span class="line"><span class="cl">After=network-online.target
+</span></span><span class="line"><span class="cl">Wants=network-online.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[Service]
+</span></span><span class="line"><span class="cl">Type=simple
+</span></span><span class="line"><span class="cl">User=jgrove
+</span></span><span class="line"><span class="cl">WorkingDirectory=/home/jgrove
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ExecStart=/usr/bin/llama-server \
+</span></span><span class="line"><span class="cl">    -m /home/jgrove/.cache/llmfit/models/Qwen3-14B-Q6_0.gguf \
+</span></span><span class="line"><span class="cl">    --host 0.0.0.0 \
+</span></span><span class="line"><span class="cl">    --port 9931 \
+</span></span><span class="line"><span class="cl">    -ngl all \
+</span></span><span class="line"><span class="cl">    -c 16384
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Restart=on-failure
+</span></span><span class="line"><span class="cl">RestartSec=5
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[Install]
+</span></span><span class="line"><span class="cl">WantedBy=multi-user.target</span></span></code></pre></td></tr></table></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div>
+</div>
+</div><p>Lets check its running:
+<img loading="lazy" src='/images/2-from-gaming-pc-to-ai-server/systemd.webp' alt="llmfit"></p>
+<p>There are a few important options here. -ngl all offloads as much of the model as possible to the GPU, while -c 16384 gives the model a 16K context window. Binding to 0.0.0.0 allows other machines on my network to reach the API instead of limiting it to localhost.</p>
+<p>Since the server is listening on the network, I also needed to open port 9931 in Uncomplicated Firewall (UFW). Rather than exposing it broadly, I limited access to my local subnet:</p>
+<div class="code-block highlight" data-mode="classic" data-copyable="true"><div class="chroma">
+<div class="code-header language-fallback"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="action-btn line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers" data-ct-tooltip><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="action-btn line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap" data-ct-tooltip><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="action-btn copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard" data-copied-text="Copied" data-ct-tooltip><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> sudo ufw allow from 192.168.1.0/24 to any port 9931 proto tcp comment &#39;llama.cpp LAN API&#39;</span></span></code></pre></td></tr></table></div>
+</div>
+</div><p>At this point, anything on my LAN can reach the llama.cpp API directly using the desktop&rsquo;s IP address.That works, but typing an IP address and port isn&rsquo;t exactly how the rest of my homelab operates. My reverse proxy already runs inside Kubernetes, handles TLS, and provides internal DNS endpoints, so I wanted the AI server to fit into that same infrastructure. The only complication is that llama.cpp isn&rsquo;t actually running inside Kubernetes.</p>
+<p>To bridge that gap, I created a Kubernetes Service and EndpointSlice that point to the desktop&rsquo;s LAN address:</p>
+<div class="code-block highlight" data-mode="classic" data-copyable="true"><div class="chroma">
+<div class="code-header language-fallback"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="action-btn line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers" data-ct-tooltip><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="action-btn line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap" data-ct-tooltip><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="action-btn copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard" data-copied-text="Copied" data-ct-tooltip><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">apiVersion: v1
+</span></span><span class="line"><span class="cl">kind: Service
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  name: llama-server
+</span></span><span class="line"><span class="cl">  namespace: utils
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  ports:
+</span></span><span class="line"><span class="cl">    - name: http
+</span></span><span class="line"><span class="cl">      port: 9931
+</span></span><span class="line"><span class="cl">      targetPort: 9931
+</span></span><span class="line"><span class="cl">---
+</span></span><span class="line"><span class="cl">apiVersion: discovery.k8s.io/v1
+</span></span><span class="line"><span class="cl">kind: EndpointSlice
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  name: llama-server
+</span></span><span class="line"><span class="cl">  namespace: utils
+</span></span><span class="line"><span class="cl">  labels:
+</span></span><span class="line"><span class="cl">    kubernetes.io/service-name: llama-server
+</span></span><span class="line"><span class="cl">addressType: IPv4
+</span></span><span class="line"><span class="cl">ports:
+</span></span><span class="line"><span class="cl">  - name: http
+</span></span><span class="line"><span class="cl">    protocol: TCP
+</span></span><span class="line"><span class="cl">    port: 9931
+</span></span><span class="line"><span class="cl">endpoints:
+</span></span><span class="line"><span class="cl">  - addresses:
+</span></span><span class="line"><span class="cl">      - 192.168.1.123</span></span></code></pre></td></tr></table></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div>
+</div>
+</div><p>From there, I can use my existing NGINX Ingress setup just like I would for an application actually running in the cluster:</p>
+<div class="code-block highlight" data-mode="classic" data-copyable="true"><div class="chroma">
+<div class="code-header language-fallback"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="action-btn line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers" data-ct-tooltip><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="action-btn line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap" data-ct-tooltip><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="action-btn copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard" data-copied-text="Copied" data-ct-tooltip><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">apiVersion: networking.k8s.io/v1
+</span></span><span class="line"><span class="cl">kind: Ingress
+</span></span><span class="line"><span class="cl">metadata:
+</span></span><span class="line"><span class="cl">  name: llama-ingress
+</span></span><span class="line"><span class="cl">  namespace: utils
+</span></span><span class="line"><span class="cl">  annotations:
+</span></span><span class="line"><span class="cl">    nginx.ingress.kubernetes.io/ssl-redirect: &#34;true&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">spec:
+</span></span><span class="line"><span class="cl">  ingressClassName: nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  tls:
+</span></span><span class="line"><span class="cl">    - hosts:
+</span></span><span class="line"><span class="cl">        - elodin.alarlab.dev
+</span></span><span class="line"><span class="cl">      secretName: wildcard-alarlab-tls
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  rules:
+</span></span><span class="line"><span class="cl">    - host: elodin.alarlab.dev
+</span></span><span class="line"><span class="cl">      http:
+</span></span><span class="line"><span class="cl">        paths:
+</span></span><span class="line"><span class="cl">          - path: /
+</span></span><span class="line"><span class="cl">            pathType: Prefix
+</span></span><span class="line"><span class="cl">            backend:
+</span></span><span class="line"><span class="cl">              service:
+</span></span><span class="line"><span class="cl">                name: llama-server
+</span></span><span class="line"><span class="cl">                port:
+</span></span><span class="line"><span class="cl">                  number: 9931</span></span></code></pre></td></tr></table></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div>
+</div>
+</div><p>Now instead of remembering something like 192.168.1.123:9931, I can access the server through <a href="https://elodin.alarlab.dev" target="_blank" rel="external nofollow noopener noreferrer">https://elodin.alarlab.dev</a> on my local network.</p>
+<p>Kubernetes handles the reverse proxy and TLS, while the actual inference workload stays exactly where I want it: directly on the desktop and its GPU.</p>
+<p>It&rsquo;s a slightly unconventional setup, but that&rsquo;s also what I like about it. The desktop isn&rsquo;t part of the Kubernetes cluster, yet it can still take advantage of the networking and ingress infrastructure I&rsquo;ve already built around it.</p>
+<h1 class="heading-element" id="whats-next"><span>What&rsquo;s Next?</span>
+  <a href="#whats-next" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>What started as an attempt to give an underutilized GPU something useful to do turned into a pretty fun little infrastructure project. I now have a desktop that can still be my desktop when I want it to be, but can also wake up, run local AI workloads, and integrate with the rest of my homelab when I don&rsquo;t need it to be a Desktop.</p>
+<p>There are definitely things I want to improve. I&rsquo;d like to experiment more with llama.cpp tuning, benchmark different models and quantizations, and set one or more Hermes agents. For now, though, I&rsquo;m pretty happy with the result. Instead of buying another server or paying for cloud GPU time, I managed to turn hardware I already owned into another useful piece of my homelab.</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2026-08-30 14:00:00">Updated on 2026-08-30&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"><span><a href="vscode://file//home/jgrove/Projects/packets-and-pods/packetsandpods/content/posts/From%20Gaming%20PC%20to%20AI%20Server:%20Building%20a%20Hybrid%20Workstation.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/from-gaming-pc-to-ai-server-building-a-hybrid-workstation/" data-hashtag="Kubernetes"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Linkedin" data-sharer="linkedin" data-url="http://localhost:1313/from-gaming-pc-to-ai-server-building-a-hybrid-workstation/"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://localhost:1313/from-gaming-pc-to-ai-server-building-a-hybrid-workstation/" data-title="From Gaming PC to AI Server: Building a Hybrid Workstation"><i class="fa-brands fa-hacker-news" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://localhost:1313/from-gaming-pc-to-ai-server-building-a-hybrid-workstation/" data-title="From Gaming PC to AI Server: Building a Hybrid Workstation"><svg class="icon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LINE</title><path d="M19.365 9.863c.349.0.63.285.63.631.0.345-.281.63-.63.63H17.61v1.125h1.755c.349.0.63.283.63.63.0.344-.281.629-.63.629h-2.386c-.345.0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346.0.627.285.627.63.0.349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211.0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346.0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195.0.375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345.0.63.285.63.63v4.771zm-5.741.0c0 .344-.282.629-.631.629-.345.0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346.0.628.285.628.63v4.771zm-2.466.629H4.917c-.345.0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348.0.63.285.63.63v4.141h1.756c.348.0.629.283.629.63.0.344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943.0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/from-gaming-pc-to-ai-server-building-a-hybrid-workstation/" data-title="From Gaming PC to AI Server: Building a Hybrid Workstation" data-image="/images/2-from-gaming-pc-to-ai-server/llama-cpp.webp"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/kubernetes/" class="post-tag" title="Tags - Kubernetes">Kubernetes</a><a href="/tags/linux/" class="post-tag" title="Tags - Linux">Linux</a><a href="/tags/ai/" class="post-tag" title="Tags - AI">AI</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/terraform-talos-and-the-art-of-the-disposable-server/" class="post-nav-item" rel="prev" title="Terraform, Talos, and the Art of the Disposable Server"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Terraform, Talos, and the Art of the Disposable Server</a></div>
+</div>
+</article>
+
+  <aside class="toc" id="toc-auto" aria-label="Contents"></aside></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.165.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.5"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">jared</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/autocomplete/autocomplete.min.js" defer></script><script src="/lib/lightgallery/lightgallery.min.js" defer></script><script src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js" defer></script><script src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js" defer></script><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/lib/cell-tooltip/cell-tooltip.umd.js" defer></script><script src="/js/config/4ad43022ad8b1d90c93f6b4598417762.js" defer></script><script src="/js/theme.min.js" defer></script></body>
+</html>

@@ -4,9 +4,9 @@
     <title>Cloud - Category - Packets and Pods</title>
     <link>http://localhost:1313/categories/cloud/</link>
     <description>A blog about my homelab journey.</description>
-    <generator>Hugo 0.162.1 &amp; FixIt v0.4.5</generator>
+    <generator>Hugo 0.165.0 &amp; FixIt v0.4.5</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 18 Jul 2026 08:39:26 -0600</lastBuildDate>
+    <lastBuildDate>Sun, 19 Jul 2026 17:47:01 -0600</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/cloud/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Terraform, Talos, and the Art of the Disposable Server</title>

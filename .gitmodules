@@ -1,3 +1,5 @@
 [submodule "packetsandpods/themes/FixIt"]
 	path = packetsandpods/themes/FixIt
+	url = https://github.com/hugo-fixit/FixIt.git[submodule "packetsandpods/themes/FixIt"]
+	path = packetsandpods/themes/FixIt
 	url = https://github.com/hugo-fixit/FixIt.git

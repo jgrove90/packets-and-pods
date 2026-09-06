@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "style.min.css",
-	"sourceRoot": "/home/jgrove/git/packetsandpods/packetsandpods",
+	"sourceRoot": "/home/jgrove/Projects/packets-and-pods/packetsandpods",
 	"sources": [
 		"themes/FixIt/assets/css/style.scss",
 		"themes/FixIt/assets/css/_variables.scss",
