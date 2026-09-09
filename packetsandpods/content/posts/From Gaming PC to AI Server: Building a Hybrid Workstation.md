@@ -15,7 +15,7 @@ lightgallery: true
 
 # A Second Life for My Desktop
 
-I believe open source models are the future, despite what the AI overlords and their fear-mongering would have us believe.
+I believe open source models are the future, despite what the [AI overlords](https://www.youtube.com/watch?v=_i91NSOyxHM) and their fear-mongering would have us believe. 
 
 Over the past few years, my desktop hasn't exactly been earning its keep. I haven't been gaming nearly as much, which means my relatively capable Radeon 6800 XT has spent a lot of time doing very little.
 
@@ -27,7 +27,8 @@ It should also complement my Kubernetes homelab nicely and, more importantly, gi
 
 I don't have anything particularly crazy running here, but here's the hardware I'm working with: 
 
-![System resource usage while running the AI server](/images/2-from-gaming-pc-to-ai-server/system-resources.webp)
+
+{{< image src="/images/2-from-gaming-pc-to-ai-server/system-resources.webp" alt="System Resources" caption="System Resources" >}}
 
 # Hybrid Server Approach With systemd
 
@@ -51,17 +52,13 @@ systemd services inbound!
 
 ### Fixing My Sleep
 
-I've had a weird problem with this computer for the last several Linux kernel updates: it wouldn't stay asleep.
+I've had a weird problem with this computer for the last several Linux kernel updates, it wouldn't stay asleep.
 
 I'd suspend the machine, the screen would go dark, and a few seconds later it would wake right back up. This started sometime around four or five kernel updates ago, and even updating the BIOS to the latest version didn't solve it.
 
-Since power management is pretty important for this project, I needed to figure out what was waking the machine up. Unfortunately, this turned into one of those troubleshooting sessions involving far too much trial and error.
+Since power management is pretty important for this project, I needed to figure out what was waking the machine up. Unfortunately, this turned into one of those troubleshooting sessions involving far too much trial and error. Eventually, I narrowed it down to an ACPI wakeup source called GPP0.
 
-Eventually, I narrowed it down to an ACPI wakeup source called GPP0.
-
-ACPI, or the Advanced Configuration and Power Interface, is the firmware interface Linux uses to communicate with things like power states, devices, and wakeup events. The kernel exposes some of these wakeup sources through /proc/acpi/wakeup.
-
-GPP0 is an ACPI-defined PCIe/General Purpose Port wakeup source. On my system, it was being allowed to wake the machine immediately after suspend. The exact device behind GPP0 is hardware and firmware dependent, but in my case disabling it was enough to let the machine actually stay asleep.
+ACPI, or the Advanced Configuration and Power Interface, is the firmware interface Linux uses to communicate with things like power states, devices, and wakeup events. The kernel exposes some of these wakeup sources through /proc/acpi/wakeup. GPP0 is an ACPI-defined PCIe/General Purpose Port wakeup source. On my system, it was being allowed to wake the machine immediately after suspend. The exact device behind GPP0 is hardware and firmware dependent, but in my case disabling it was enough to let the machine actually stay asleep.
 
 The fix ended up being surprisingly simple. I created a systemd service that disables the GPP0 wakeup source during boot:
 
@@ -86,9 +83,7 @@ This is one of those fixes that feels a little ridiculous until you realize you'
 
 Now that the sleep issue was fixed, I needed a way to remotely wake the desktop when I wanted to use it for AI.
 
-The first step was in the BIOS. I enabled Wake-on-LAN and disabled ErP (Energy-related Products). ErP can cut power to the network hardware during sleep, which defeats the whole purpose of Wake-on-LAN. Most modern motherboards support this, and it's a surprisingly useful feature.
-
-Unfortunately, enabling Wake-on-LAN in the BIOS wasn't enough. Linux also needs to be configured to listen for Wake-on-LAN packets.
+The first step was in the BIOS. I enabled Wake-on-LAN and disabled ErP (Energy-related Products). ErP can cut power to the network hardware during sleep, which defeats the whole purpose of Wake-on-LAN. Most modern motherboards support this, and it's a surprisingly useful feature. Unfortunately, enabling Wake-on-LAN in the BIOS wasn't enough. Linux also needs to be configured to listen for Wake-on-LAN packets.
 
 I used ```ethtool``` to enable it on my Ethernet interface:
 
@@ -126,13 +121,13 @@ That's it. One packet, and the desktop wakes up.
 
 With the hardware sorted out, the next question was what I was actually going to use to run the models.
 
-The two obvious choices were vLLM and llama.cpp.
+The two obvious choices were [vLLM](https://github.com/vllm-project/vllm) and [llama.cpp](https://github.com/ggml-org/llama.cpp).
 
-vLLM is designed primarily around high-performance model serving. It makes a lot of sense when you're running larger models, handling multiple concurrent requests, and trying to maximize throughput. It also provides an OpenAI-compatible API, making it a good fit for production-style inference workloads.
+```vLLM``` is designed primarily around high-performance model serving. It makes a lot of sense when you're running larger models, handling multiple concurrent requests, and trying to maximize throughput. It also provides an OpenAI-compatible API, making it a good fit for production-style inference workloads.
 
-llama.cpp takes a different approach. It's lightweight, runs on both CPUs and GPUs, has strong support for quantized models, and includes its own HTTP server with an OpenAI-compatible API. It also supports things like continuous batching and parallel requests, so it isn't limited to running one prompt at a time.
+```llama.cpp``` takes a different approach. It's lightweight, runs on both CPUs and GPUs, has strong support for quantized models, and includes its own HTTP server with an OpenAI-compatible API. It also supports things like continuous batching and parallel requests, so it isn't limited to running one prompt at a time.
 
-In a larger GPU cluster where throughput is the primary concern, I'd probably reach for vLLM. For this situation, however, llama.cpp made more sense.
+In a larger GPU cluster where throughput is the primary concern, I'd probably reach for ```vLLM```. For this situation, however, ```llama.cpp``` made more sense.
 
 I'm working with a single desktop GPU, I want to experiment with different quantized models, and I care more about getting the most out of the hardware I already own than maximizing requests per second.
 
@@ -144,12 +139,11 @@ Choosing a model can be overwhelming. How do you know what will actually run on 
 
 Being a fan of terminal user interfaces (TUIs), I found a much easier way to answer that question: ```llmfit```.
 
-![llmfit](/images/2-from-gaming-pc-to-ai-server/llmfit.webp)
-
+{{< image src="/images/2-from-gaming-pc-to-ai-server/llmfit.webp" alt="llmfit" caption="llmfit" >}}
 
 ```llmfit``` detects your hardware and estimates which models will fit, what quantization makes sense, and how they should perform. Instead of downloading a 20GB model and finding out the hard way that my GPU isn't particularly interested in running it, I can see what makes sense before downloading anything. Using the TUI, I was able to browse models based on my actual hardware and narrow down the options pretty quickly.
 
-For this setup, I settled on Qwen3-14B Q6_K in GGUF format.GGUF is a model file format designed for local inference. It packages the information needed to run a model—including its weights, tokenizer, and configuration—into a single file. It is also the format used by llama.cpp.
+For this setup, I settled on Qwen3-14B Q6_K in GGUF format.GGUF is a model file format designed for local inference. It packages the information needed to run a model—including its weights, tokenizer, and configuration—into a single file. It is also the format used by ```llama.cpp```.
 
 The Q6_K part refers to the quantization. In simple terms, quantization reduces the precision used to store the model's weights, which significantly reduces memory requirements compared with running the model at full precision. The tradeoff is that lower quantization can reduce model quality, while higher quantization uses more memory. Q6_K sits toward the higher-quality end of the common quantization options, giving me a good balance between memory usage and model quality for the hardware I have.
 
@@ -159,7 +153,7 @@ The result is a model that's large enough to be useful without completely consum
 
 With the model selected, it was finally time to launch the server.
 
-Thankfully, this part is pretty straightforward. llama.cpp includes llama-server, which exposes the model over HTTP and provides an OpenAI-compatible API. I wrapped it in a systemd service so it starts automatically, restarts if it fails, and behaves like any other service on the machine.
+Thankfully, this part is pretty straightforward. ```llama.cpp``` includes llama-server, which exposes the model over HTTP and provides an OpenAI-compatible API. I wrapped it in a systemd service so it starts automatically, restarts if it fails, and behaves like any other service on the machine.
 ```
 [Unit]
 Description=llama.cpp AI Server
@@ -185,11 +179,12 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 Lets check its running:
-![llmfit](/images/2-from-gaming-pc-to-ai-server/systemd.webp)
+
+{{< image src="/images/2-from-gaming-pc-to-ai-server/systemd.webp" alt="llama-server.service" caption="llama-server.service" >}}
 
 There are a few important options here. -ngl all offloads as much of the model as possible to the GPU, while -c 16384 gives the model a 16K context window. Binding to 0.0.0.0 allows other machines on my network to reach the API instead of limiting it to localhost.
 
-Since the server is listening on the network, I also needed to open port 9931 in Uncomplicated Firewall (UFW). Rather than exposing it broadly, I limited access to my local subnet:
+Since the server is listening on the network, I also needed to open port 9931 in Uncomplicated Firewall (```UFW```). Rather than exposing it broadly, I limited access to my local subnet:
 
 ```
  sudo ufw allow from 192.168.1.0/24 to any port 9931 proto tcp comment 'llama.cpp LAN API'
@@ -262,7 +257,7 @@ spec:
 ```
 Now instead of remembering something like 192.168.1.123:9931, I can access the server through https://elodin.alarlab.dev on my local network.
 
-Kubernetes handles the reverse proxy and TLS, while the actual inference workload stays exactly where I want it: directly on the desktop and its GPU.
+Kubernetes handles the reverse proxy and TLS, while the actual inference workload stays exactly where I want it, directly on the desktop and its GPU.
 
 It's a slightly unconventional setup, but that's also what I like about it. The desktop isn't part of the Kubernetes cluster, yet it can still take advantage of the networking and ingress infrastructure I've already built around it.
 
