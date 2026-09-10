@@ -9,6 +9,9 @@ From the site directory:
 cd packetsandpods
 hugo server -D
 ```
+Rebuild via:
+
+```hugo --minify```
 
 ## CI/CD
 

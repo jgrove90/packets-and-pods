@@ -19,7 +19,7 @@ I believe open source models are the future, despite what the [AI overlords](htt
 
 Over the past few years, my desktop hasn't exactly been earning its keep. I haven't been gaming nearly as much, which means my relatively capable Radeon 6800 XT has spent a lot of time doing very little.
 
-At the same time, AI infrastructure has become increasingly interesting to me. So rather than let a perfectly good GPU become an expensive paperweight, I decided to give the machine a second job: running local AI workloads.
+At the same time, AI infrastructure has become increasingly interesting to me. So rather than let a perfectly good GPU become an expensive paperweight, I decided to give the machine a second job, running local AI workloads.
 
 The goal isn't to turn my desktop into a dedicated server. I still want to use it as a desktop especially with the possibility of Grand Theft Auto VI eventually making its way to PC (can my 6800 XT even run it? That's a problem for future me). Instead, I'm building a hybrid setup where the machine can pull double duty as an AI inference server when I'm not gaming or otherwise using it.
 
@@ -131,11 +131,11 @@ In a larger GPU cluster where throughput is the primary concern, I'd probably re
 
 I'm working with a single desktop GPU, I want to experiment with different quantized models, and I care more about getting the most out of the hardware I already own than maximizing requests per second.
 
-The next step is tuning llama.cpp specifically for this machine. Things like GPU offloading, context size, batch size, and the model's quantization can have a significant impact on memory usage and inference performance. Rather than assuming the default settings are optimal, I'll benchmark different configurations and find the sweet spot for my hardware in a future blog post. 
+The next step is tuning ```llama.cpp``` specifically for this machine. Things like GPU offloading, context size, batch size, and the model's quantization can have a significant impact on memory usage and inference performance. Rather than assuming the default settings are optimal, I'll benchmark different configurations and find the sweet spot for my hardware in a future blog post. 
 
 ## Choosing the model
 
-Choosing a model can be overwhelming. How do you know what will actually run on your hardware? There are thousands of models on Hugging Face, an open, maybe not that open model registry, with the recent purchase by Nvidia. Additionally, each model comes in multiple sizes and quantizations.
+Choosing a model can be overwhelming. How do you know what will actually run on your hardware? There are thousands of models on Hugging Face, an open, maybe not that open model registry, with the [recent purchase by Nvidia](https://www.reuters.com/business/nvidia-buy-hugging-face-nearly-13-billion-big-bet-open-ai-models-2026-09-03/). Additionally, each model comes in multiple sizes and quantizations.
 
 Being a fan of terminal user interfaces (TUIs), I found a much easier way to answer that question: ```llmfit```.
 
@@ -265,5 +265,5 @@ It's a slightly unconventional setup, but that's also what I like about it. The 
 
 What started as an attempt to give an underutilized GPU something useful to do turned into a pretty fun little infrastructure project. I now have a desktop that can still be my desktop when I want it to be, but can also wake up, run local AI workloads, and integrate with the rest of my homelab when I don't need it to be a Desktop.
 
-There are definitely things I want to improve. I'd like to experiment more with llama.cpp tuning, benchmark different models and quantizations, and set one or more Hermes agents. For now, though, I'm pretty happy with the result. Instead of buying another server or paying for cloud GPU time, I managed to turn hardware I already owned into another useful piece of my homelab. 
+There are definitely things I want to improve. I'd like to experiment more with ```llama.cpp``` tuning, benchmark different models and quantizations, and set one or more Hermes agents. For now, though, I'm pretty happy with the result. Instead of buying another server or paying for cloud GPU time, I managed to turn hardware I already owned into another useful piece of my homelab. 
 
