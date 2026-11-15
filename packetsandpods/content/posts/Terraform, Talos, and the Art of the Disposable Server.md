@@ -1,13 +1,13 @@
 ---
 title: "Terraform, Talos, and the Art of the Disposable Server"
 date: 2026-05-24T17:40:49-06:00
-lastmod: 2026-05-24T16:45:40+08:00
+lastmod: 2026-05-24T17:40:49-06:00
 draft: false
-description: "This article describes how to deploy Talos Linux using Terraform on AWS."
+summary: "This article describes how to deploy Talos Linux using Terraform on AWS."
 featuredImage: "/images/1-terraform-talos/talos-banner.webp"
-images: [/images/1-terraform-talos/talos-banner.webp]
+images: ["/images/1-terraform-talos/talos-banner.webp"]
 
-tags: ["Kubernetes", "Linux", Terraform]
+tags: ["Kubernetes", "Linux", "Terraform"]
 categories: ["Cloud"]
 
 lightgallery: true

@@ -154,9 +154,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
   description = "A blog about my homelab journey."
 
-  # website images for Open Graph and Twitter Cards
 
-  images = ["/logo.png"]
 
 
 
@@ -288,7 +286,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
     # optional site title override for the app when added to an iOS home screen or Android launcher
 
-    title = "My cool site"
+    title = "Packets and Pods"
 
     # whether to omit favicon resource links
 
@@ -844,7 +842,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
         # ["apple.yml", "google.yml", "facebook.yml", "twitter.yml"]
 
-        # located in "themes/LoveIt/assets/lib/valine/emoji/" directory
+        # located in "themes/FixIt/assets/lib/valine/emoji/" directory
 
         # you can store your own data files in the same path under your project:
 
@@ -1112,7 +1110,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
     # ["jsdelivr.yml"]
 
-    # located in "themes/LoveIt/assets/data/cdn/" directory
+    # located in "themes/FixIt/assets/data/cdn/" directory
 
     # you can store your own data files in the same path under your project:
 
@@ -1154,7 +1152,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
     # false is a necessary configuration
 
-    # (https://github.com/dillonzq/LoveIt/issues/158)
+    # (https://github.com/hugo-fixit/FixIt/issues/158)
 
     noClasses = false
 
