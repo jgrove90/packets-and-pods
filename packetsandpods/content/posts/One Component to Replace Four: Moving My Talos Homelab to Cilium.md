@@ -8,8 +8,8 @@ summary: "Replacing flannel, kube-proxy, ingress-nginx and MetalLB with Cilium o
 tags: ["Kubernetes", "Cilium", "Linux"]
 categories: ["Cloud"]
 
-featuredImage: "/images/3-cilium/cilium_migration.png"
-images: ["/images/3-cilium/cilium_migration.png"]
+featuredImage: "/images/3-cilium/cilium_migration.webp"
+images: ["/images/3-cilium/cilium_migration.webp"]
 
 lightgallery: true
 ---
