@@ -2,7 +2,7 @@
 title: "One Component to Replace Four: Moving My Talos Homelab to Cilium"
 date: 2026-11-15T12:00:00-07:00
 lastmod: 2026-11-15T12:00:00-07:00
-draft: true
+draft: false
 summary: "Replacing flannel, kube-proxy, ingress-nginx and MetalLB with Cilium on a three-node Talos homelab: the final config and what went sideways."
 
 tags: ["Kubernetes", "Cilium", "Linux"]
